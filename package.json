@@ -1,0 +1,44 @@
+{
+  "name": "originselect-mcp-server",
+  "version": "1.0.6",
+  "description": "MCP server for OriginSelect Discovery API — search ethical, origin-verified products and brands via AI agents",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "originselect-mcp": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "originselect",
+    "ethical-products",
+    "product-discovery",
+    "ai-agent"
+  ],
+  "author": "OriginSelect",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chhavimishra/originselect-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chhavimishra/originselect-mcp-server/issues"
+  },
+  "homepage": "https://originselect.com",
+  "files": [
+    "src/",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
