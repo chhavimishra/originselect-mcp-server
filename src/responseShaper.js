@@ -49,7 +49,8 @@ export function shapeProductsResponse(apiResponse) {
     collections,
     intent: apiResponse.intent || null,
     totalProducts: apiResponse.meta?.totalProducts || products.length,
-    latencyMs: apiResponse.meta?.latencyMs || null
+    latencyMs: apiResponse.meta?.latencyMs || null,
+    disclaimer: 'Values and certifications are based on brand-reported data. Visit the product or brand website to verify specific claims before purchasing.'
   };
 }
 
