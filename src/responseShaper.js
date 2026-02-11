@@ -23,7 +23,8 @@ export function shapeProductsResponse(apiResponse) {
     price: p.price || p.currentPrice || null,
     values: extractProductValues(p),
     description: p.description || '',
-    purchaseUrl: p.affiliateUrl || p.sourceUrl || p.url || null,
+    purchaseUrl: extractBestPurchaseUrl(p),
+    storeLinks: extractStoreLinks(p),
     imageUrl: p.imageUrl || p.image || null,
     matchScore: p.matchScore || null,
     matchReasons: p.matchReasons || []
@@ -85,6 +86,44 @@ export function shapeBrandsResponse(apiResponse) {
     totalBrands: brands.length,
     latencyMs: apiResponse.meta?.latencyMs || null
   };
+}
+
+/**
+ * Extract all store links for a product so agents can present multiple purchase options.
+ */
+function extractStoreLinks(product) {
+  const pl = product.purchaseLinks;
+  if (!pl) return [];
+  const links = [];
+  if (Array.isArray(pl.stores)) {
+    for (const s of pl.stores) {
+      if (s.url) links.push({ name: s.name || 'Store', url: s.url });
+    }
+  }
+  if (links.length === 0 && pl.dtc) {
+    links.push({ name: product.brand || 'Brand', url: pl.dtc });
+  }
+  return links;
+}
+
+/**
+ * Extract the best purchase URL from a product, preferring affiliate-tagged store links.
+ * Products have a purchaseLinks structure: { dtc, amazon, stores: [{ name, url, country }] }
+ * The stores[] URLs contain affiliate tags (e.g., ?tag=store0829160e-20).
+ */
+function extractBestPurchaseUrl(product) {
+  const pl = product.purchaseLinks;
+  if (pl) {
+    // Prefer affiliate-tagged store URLs first (these have Amazon associate tags)
+    if (Array.isArray(pl.stores) && pl.stores.length > 0) {
+      return pl.stores[0].url;
+    }
+    // Fall back to DTC (brand's own store) or raw Amazon link
+    if (pl.dtc) return pl.dtc;
+    if (pl.amazon) return pl.amazon;
+  }
+  // Legacy field fallbacks
+  return product.affiliateUrl || product.sourceUrl || product.url || null;
 }
 
 /**
