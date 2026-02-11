@@ -25,9 +25,7 @@ export function shapeProductsResponse(apiResponse) {
     description: p.description || '',
     purchaseUrl: extractBestPurchaseUrl(p),
     storeLinks: extractStoreLinks(p),
-    imageUrl: p.imageUrl || p.image || null,
-    matchScore: p.matchScore || null,
-    matchReasons: p.matchReasons || []
+    imageUrl: p.imageUrl || p.image || null
   }));
 
   const brands = (apiResponse.brands || []).map(b => ({
@@ -35,16 +33,13 @@ export function shapeProductsResponse(apiResponse) {
     country: b.country || '',
     values: b.values || b.classificationTags || [],
     website: b.website || null,
-    productCount: b.productCount || 0,
-    matchScore: b.matchScore || null,
-    matchReasons: b.matchReasons || []
+    productCount: b.productCount || 0
   }));
 
   const collections = (apiResponse.collections || []).map(c => ({
     title: c.title || c.name || '',
     description: c.description || '',
-    productCount: c.productCount || c.products?.length || 0,
-    matchScore: c.matchScore || null
+    productCount: c.productCount || c.products?.length || 0
   }));
 
   return {
