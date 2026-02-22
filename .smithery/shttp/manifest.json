@@ -1,0 +1,358 @@
+{
+  "payload": {
+    "type": "hosted",
+    "stateful": false,
+    "hasAuthAdapter": false,
+    "serverCard": {
+      "serverInfo": {
+        "name": "originselect-discovery",
+        "version": "1.0.0"
+      },
+      "tools": [
+        {
+          "name": "search_products",
+          "description": "Search OriginSelect's curated catalog of ethical, origin-verified products. Filter by country of origin, ethical values (e.g., women-owned, organic, b-corp), product category, brand, and price. Returns scored and ranked results with match reasons.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "Optional natural language query for context (e.g., \"non-toxic baby shampoo from Canada\"). Structured fields below take precedence."
+              },
+              "country": {
+                "type": "string",
+                "description": "Country of origin to filter by",
+                "enum": [
+                  "Canada",
+                  "USA"
+                ]
+              },
+              "category": {
+                "type": "string",
+                "description": "Product category",
+                "enum": [
+                  "Beauty",
+                  "Personal Care",
+                  "Baby",
+                  "Health & Wellness",
+                  "Supplements",
+                  "Home & Kitchen",
+                  "Cleaning",
+                  "Food & Grocery",
+                  "Beverages",
+                  "Pet Care",
+                  "Fashion",
+                  "Accessories",
+                  "Electronics",
+                  "Office",
+                  "Outdoors",
+                  "Sports",
+                  "Toys"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "women-owned",
+                    "black-owned",
+                    "indigenous-owned",
+                    "latino-owned",
+                    "aapi-owned",
+                    "veteran-owned",
+                    "family-owned",
+                    "lgbtq-owned",
+                    "minority-owned",
+                    "b-corp",
+                    "organic",
+                    "sustainable",
+                    "vegan",
+                    "non-gmo",
+                    "fair-trade",
+                    "social-impact",
+                    "fragrance-free",
+                    "plastic-free",
+                    "cruelty-free",
+                    "non-toxic",
+                    "gluten-free"
+                  ]
+                },
+                "description": "Ethical/ownership values to filter by (e.g., [\"women-owned\", \"organic\", \"non-toxic\"])"
+              },
+              "brand": {
+                "type": "string",
+                "description": "Brand name to search for"
+              },
+              "keywords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Specific product keywords (e.g., [\"shampoo\", \"moisturizer\"])"
+              },
+              "priceMax": {
+                "type": "number",
+                "description": "Maximum price in dollars"
+              },
+              "classification": {
+                "type": "string",
+                "description": "Canadian brand classification filter",
+                "enum": [
+                  "fully-canadian",
+                  "canadian-manufactured",
+                  "canadian-operations"
+                ]
+              },
+              "market": {
+                "type": "string",
+                "description": "Market scope: \"canada\" for Canadian products only, \"global\" for international, \"all\" for both",
+                "enum": [
+                  "canada",
+                  "global",
+                  "all"
+                ],
+                "default": "all"
+              },
+              "limit": {
+                "type": "number",
+                "description": "Maximum number of products to return (1-50)",
+                "default": 12
+              }
+            }
+          }
+        },
+        {
+          "name": "search_brands",
+          "description": "Search for ethical and origin-verified brands on OriginSelect. Filter by country of origin, ethical values (women-owned, b-corp, organic, etc.), and product category. Returns brand details including values, website, and product count.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "country": {
+                "type": "string",
+                "description": "Country of origin to filter by",
+                "enum": [
+                  "Canada",
+                  "USA"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "women-owned",
+                    "black-owned",
+                    "indigenous-owned",
+                    "latino-owned",
+                    "aapi-owned",
+                    "veteran-owned",
+                    "family-owned",
+                    "lgbtq-owned",
+                    "minority-owned",
+                    "b-corp",
+                    "organic",
+                    "sustainable",
+                    "vegan",
+                    "non-gmo",
+                    "fair-trade",
+                    "social-impact",
+                    "fragrance-free",
+                    "plastic-free",
+                    "cruelty-free",
+                    "non-toxic",
+                    "gluten-free"
+                  ]
+                },
+                "description": "Ethical/ownership values to filter by"
+              },
+              "category": {
+                "type": "string",
+                "description": "Product category the brand operates in",
+                "enum": [
+                  "Beauty",
+                  "Personal Care",
+                  "Baby",
+                  "Health & Wellness",
+                  "Supplements",
+                  "Home & Kitchen",
+                  "Cleaning",
+                  "Food & Grocery",
+                  "Beverages",
+                  "Pet Care",
+                  "Fashion",
+                  "Accessories",
+                  "Electronics",
+                  "Office",
+                  "Outdoors",
+                  "Sports",
+                  "Toys"
+                ]
+              },
+              "brand": {
+                "type": "string",
+                "description": "Brand name to look up directly"
+              },
+              "market": {
+                "type": "string",
+                "description": "Market scope",
+                "enum": [
+                  "canada",
+                  "global",
+                  "all"
+                ],
+                "default": "all"
+              },
+              "limit": {
+                "type": "number",
+                "description": "Maximum number of brands to return (1-20)",
+                "default": 10
+              }
+            }
+          }
+        },
+        {
+          "name": "refine_search",
+          "description": "Refine a previous product search by adding/removing filters. Takes the intent object from a prior search_products response and applies modifications. No new query parsing needed — this is a fast refinement.\n\nExamples:\n- Add a value: { action: \"add\", field: \"values\", value: \"organic\" }\n- Remove a value: { action: \"remove\", field: \"values\", value: \"vegan\" }\n- Change country: { action: \"modify\", field: \"country\", value: \"Canada\" }\n- Set max price: { action: \"modify\", field: \"priceMax\", value: 30 }\n- Change category: { action: \"modify\", field: \"category\", value: \"Beauty\" }",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "intent": {
+                "type": "object",
+                "description": "The intent object returned from a previous search_products call. Pass it unchanged.",
+                "properties": {
+                  "intentType": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "keywords": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "brand": {
+                    "type": "string"
+                  },
+                  "priceMax": {
+                    "type": "number"
+                  },
+                  "priceMin": {
+                    "type": "number"
+                  },
+                  "classification": {
+                    "type": "string"
+                  }
+                }
+              },
+              "modifications": {
+                "type": "array",
+                "description": "Array of modifications to apply to the intent",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "add",
+                        "remove",
+                        "modify"
+                      ],
+                      "description": "\"add\" to append a value/keyword, \"remove\" to strip one, \"modify\" to change a scalar field"
+                    },
+                    "field": {
+                      "type": "string",
+                      "enum": [
+                        "values",
+                        "keywords",
+                        "excludes",
+                        "country",
+                        "category",
+                        "classification",
+                        "priceMax",
+                        "priceMin",
+                        "market"
+                      ],
+                      "description": "The intent field to modify"
+                    },
+                    "value": {
+                      "type": "string",
+                      "description": "The value to add, remove, or set. Use strings for all fields (e.g., \"30\" for priceMax)."
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "value"
+                  ]
+                }
+              },
+              "market": {
+                "type": "string",
+                "enum": [
+                  "canada",
+                  "global",
+                  "all"
+                ],
+                "description": "Market scope override"
+              },
+              "limit": {
+                "type": "number",
+                "description": "Max products to return (1-50)",
+                "default": 12
+              }
+            },
+            "required": [
+              "intent",
+              "modifications"
+            ]
+          }
+        },
+        {
+          "name": "get_values",
+          "description": "List all supported ethical/ownership values that can be used to filter products and brands. Returns canonical value tokens with display labels.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_categories",
+          "description": "List all supported product categories that can be used to filter products and brands.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_countries",
+          "description": "List all supported countries of origin that can be used to filter products and brands. Currently supports Canada and USA.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ],
+      "resources": [],
+      "prompts": []
+    },
+    "source": {
+      "commit": "7b515bb40c9ac7aa822c6758f79a4c5fde02b234",
+      "branch": "main"
+    }
+  },
+  "artifacts": {
+    "module": "module.js",
+    "sourcemap": "module.js.map"
+  }
+}

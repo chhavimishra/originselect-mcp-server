@@ -25,7 +25,8 @@ export function shapeProductsResponse(apiResponse) {
     description: p.description || '',
     purchaseUrl: extractBestPurchaseUrl(p),
     storeLinks: extractStoreLinks(p),
-    imageUrl: p.imageUrl || p.image || null
+    imageUrl: p.imageUrl || p.image || null,
+    verified: p.proVerified === true
   }));
 
   const brands = (apiResponse.brands || []).map(b => ({
@@ -33,7 +34,8 @@ export function shapeProductsResponse(apiResponse) {
     country: b.country || '',
     values: b.values || b.classificationTags || [],
     website: b.website || null,
-    productCount: b.productCount || 0
+    productCount: b.productCount || 0,
+    verified: b.proVerified === true
   }));
 
   const collections = (apiResponse.collections || []).map(c => ({
@@ -72,6 +74,7 @@ export function shapeBrandsResponse(apiResponse) {
     website: b.website || null,
     description: b.description || null,
     productCount: b.productCount || 0,
+    verified: b.proVerified === true,
     matchScore: b.matchScore || null,
     matchReasons: b.matchReasons || []
   }));

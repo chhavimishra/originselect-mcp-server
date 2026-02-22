@@ -1,0 +1,19 @@
+# Smithery configuration for originselect-mcp-server
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      API_BASE_URL:
+        type: string
+        default: "https://api.originselect.com"
+        description: "OriginSelect API base URL"
+    required: []
+  commandFunction: |-
+    (config) => ({
+      command: "node",
+      args: ["src/index.js"],
+      env: {
+        API_BASE_URL: config.API_BASE_URL ?? "https://api.originselect.com"
+      }
+    })

@@ -41,86 +41,96 @@ import {
 
 // ─── Server Setup ───────────────────────────────────────────────────────────
 
-const server = new Server(
-  {
-    name: 'originselect-discovery',
-    version: '1.0.0'
-  },
-  {
-    capabilities: {
-      tools: {}
+function createServer() {
+  const server = new Server(
+    {
+      name: 'originselect-discovery',
+      version: '1.0.0'
+    },
+    {
+      capabilities: {
+        tools: {}
+      }
     }
-  }
-);
+  );
 
-// ─── List Tools ─────────────────────────────────────────────────────────────
+  // ─── List Tools ─────────────────────────────────────────────────────────────
 
-server.setRequestHandler(ListToolsRequestSchema, async () => ({
-  tools: [
-    searchProductsTool,
-    searchBrandsTool,
-    refineSearchTool,
-    getValuesTool,
-    getCategoriesTool,
-    getCountriesTool
-  ]
-}));
+  server.setRequestHandler(ListToolsRequestSchema, async () => ({
+    tools: [
+      searchProductsTool,
+      searchBrandsTool,
+      refineSearchTool,
+      getValuesTool,
+      getCategoriesTool,
+      getCountriesTool
+    ]
+  }));
 
-// ─── Call Tool ──────────────────────────────────────────────────────────────
+  // ─── Call Tool ──────────────────────────────────────────────────────────────
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
+  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    const { name, arguments: args } = request.params;
 
-  let result;
+    let result;
 
-  switch (name) {
-    case 'search_products':
-      result = await handleSearchProducts(args || {});
-      break;
+    switch (name) {
+      case 'search_products':
+        result = await handleSearchProducts(args || {});
+        break;
 
-    case 'search_brands':
-      result = await handleSearchBrands(args || {});
-      break;
+      case 'search_brands':
+        result = await handleSearchBrands(args || {});
+        break;
 
-    case 'refine_search':
-      result = await handleRefineSearch(args || {});
-      break;
+      case 'refine_search':
+        result = await handleRefineSearch(args || {});
+        break;
 
-    case 'get_values':
-      result = handleGetValues();
-      break;
+      case 'get_values':
+        result = handleGetValues();
+        break;
 
-    case 'get_categories':
-      result = handleGetCategories();
-      break;
+      case 'get_categories':
+        result = handleGetCategories();
+        break;
 
-    case 'get_countries':
-      result = handleGetCountries();
-      break;
+      case 'get_countries':
+        result = handleGetCountries();
+        break;
 
-    default:
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({ error: `Unknown tool: ${name}` })
-        }],
-        isError: true
-      };
-  }
+      default:
+        return {
+          content: [{
+            type: 'text',
+            text: JSON.stringify({ error: `Unknown tool: ${name}` })
+          }],
+          isError: true
+        };
+    }
 
-  return {
-    content: [{
-      type: 'text',
-      text: JSON.stringify(result, null, 2)
-    }]
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify(result, null, 2)
+      }]
+    };
+  });
+
+  // ─── Error Handling ──────────────────────────────────────────────────────────
+
+  server.onerror = (error) => {
+    console.error('[originselect-mcp] Error:', error);
   };
-});
 
-// ─── Error Handling ──────────────────────────────────────────────────────────
+  return server;
+}
 
-server.onerror = (error) => {
-  console.error('[originselect-mcp] Error:', error);
-};
+// ─── Smithery Sandbox Export ────────────────────────────────────────────────
+
+export function createSandboxServer() {
+  return createServer();
+}
 
 process.on('SIGINT', async () => {
   await server.close();
@@ -130,6 +140,13 @@ process.on('SIGINT', async () => {
 // ─── Start ──────────────────────────────────────────────────────────────────
 
 async function main() {
+  const server = createServer();
+
+  process.on('SIGINT', async () => {
+    await server.close();
+    process.exit(0);
+  });
+
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error('[originselect-mcp] Server running on stdio');
