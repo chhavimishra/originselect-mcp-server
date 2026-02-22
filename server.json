@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.chhavimishra/originselect-mcp-server",
+  "description": "Search ethical, origin-verified products and brands by country of origin",
+  "repository": {
+    "url": "https://github.com/chhavimishra/originselect-mcp-server",
+    "source": "github"
+  },
+  "version": "1.0.10",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "originselect-mcp-server",
+      "version": "1.0.10",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "Base URL for the OriginSelect API",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "API_BASE_URL"
+        }
+      ]
+    }
+  ]
+}
