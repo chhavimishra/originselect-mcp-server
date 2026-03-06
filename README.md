@@ -1,19 +1,54 @@
 # OriginSelect MCP Server
 
+[![npm version](https://img.shields.io/npm/v/originselect-mcp-server)](https://www.npmjs.com/package/originselect-mcp-server)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Model Context Protocol server for [OriginSelect](https://originselect.com) — search ethical, origin-verified products and brands via AI agents.
 
 Works with Claude Desktop, Cursor, Windsurf, and any MCP-compatible client.
 
 ## Quick Start
 
+### Option 1: npx (recommended)
+
+No install needed — just add to your Claude Desktop config:
+
+```json
+{
+  "mcpServers": {
+    "originselect": {
+      "command": "npx",
+      "args": ["originselect-mcp-server"]
+    }
+  }
+}
+```
+
+### Option 2: Global install
+
 ```bash
+npm install -g originselect-mcp-server
+```
+
+Then add to Claude Desktop config:
+
+```json
+{
+  "mcpServers": {
+    "originselect": {
+      "command": "originselect-mcp-server"
+    }
+  }
+}
+```
+
+### Option 3: From source
+
+```bash
+git clone https://github.com/chhavimishra/originselect-mcp-server.git
 cd originselect-mcp-server
 npm install
 ```
-
-### Claude Desktop
-
-Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
@@ -36,14 +71,20 @@ Add to your MCP settings:
 ```json
 {
   "originselect": {
-    "command": "node",
-    "args": ["./originselect-mcp-server/src/index.js"],
-    "env": {
-      "API_BASE_URL": "https://api.originselect.com"
-    }
+    "command": "npx",
+    "args": ["originselect-mcp-server"]
   }
 }
 ```
+
+## Example Queries
+
+Once connected, ask your AI assistant:
+
+- *"Find organic baby products from Canada under $25"*
+- *"Show me women-owned coffee brands in the US"*
+- *"What B Corp certified skincare brands do you have?"*
+- *"Find vegan, cruelty-free pet products"*
 
 ## Tools
 
