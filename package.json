@@ -1,6 +1,7 @@
 {
   "name": "originselect-mcp-server",
-  "version": "1.0.9",
+  "version": "1.0.11",
+  "mcpName": "io.github.chhavimishra/originselect-mcp-server",
   "description": "MCP server for OriginSelect Discovery API — search ethical, origin-verified products and brands via AI agents",
   "type": "module",
   "main": "src/index.js",
